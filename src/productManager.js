@@ -80,10 +80,10 @@ export class ProductManager {
         return foundedProduct
       }
       else {
-        console.log('Not found')
+        throw new Error('Bad or missing product ID. Product not found')
       }
     } catch (error) {
-      throw new Error('Error getting product by ID')
+      throw new Error(error.message)
     }
   }
 

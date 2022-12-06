@@ -26,21 +26,46 @@ app.get('/', (req, res) => {
 app.get('/products', async (req, res) => {
 
   try {
-    const { limit } = req.query
+    let { limit } = req.query
+    limit = Number(limit)
     const products = await productManager.getProducts()
 
-    if (limit) {
-
+    if (limit && !isNaN(limit)) {
       res.status(200).json({
         success: true,
         limit: products.slice(0, limit)
       })
-
     } else {
-
       res.status(200).json({
         success: true,
         procuts: products
+      })
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+
+})
+
+app.get('/products/:pid', async (req, res) => {
+
+  try {
+    let { pid } = req.params
+    pid = Number(pid)
+
+    if (pid && !isNaN(pid)) {
+      const foundedProduct = await productManager.getproductById(pid)
+      res.status(200).json({
+        success: true,
+        pid: foundedProduct
+      })
+    } else {
+      res.status(401).json({
+        success: false,
+        message: 'Bad or missing product ID'
       })
     }
 
@@ -53,17 +78,6 @@ app.get('/products', async (req, res) => {
 
 })
 
-app.get('/products/:pid', async (req, res) => {
-
-  const { pid } = req.params
-
-  res.status(200).json({
-    success: true,
-    pid: pid
-  })
-
-})
-
 app.listen(3000, () => {
-  console.log(`🚀 Server running on por ${PORT}`)
+  console.log(`[index.js]: 🚀 Server running on por ${PORT}`)
 })
