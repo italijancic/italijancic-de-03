@@ -67,7 +67,7 @@ app.get('/products/:pid', async (req, res) => {
         pid: foundedProduct
       })
     } else {
-      res.status(401).json({
+      res.status(400).json({
         success: false,
         message: 'Bad or missing product ID'
       })
