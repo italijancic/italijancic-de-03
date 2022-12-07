@@ -43,6 +43,7 @@ export class ProductManager {
 
   }
 
+  // If file does not exist: crerate file and add some products
   async loadTestData() {
     try {
       if (!fs.existsSync(this.path)) {
@@ -62,7 +63,6 @@ export class ProductManager {
     }
   }
 
-  // If file does not exist: crerate file and add some products
   async getProducts() {
     try {
       await this.#readProducts()

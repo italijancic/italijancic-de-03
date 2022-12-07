@@ -35,6 +35,11 @@ app.get('/products', async (req, res) => {
         success: true,
         limit: products.slice(0, limit)
       })
+    } else if (isNaN(limit)) {
+      res.status(400).json({
+        success: false,
+        message: 'Limit is must be a number'
+      })
     } else {
       res.status(200).json({
         success: true,
