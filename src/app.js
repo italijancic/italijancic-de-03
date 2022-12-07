@@ -30,7 +30,7 @@ app.get('/products', async (req, res) => {
     limit = Number(limit)
     const products = await productManager.getProducts()
 
-    if (limit && !isNaN(limit)) {
+    if (!isNaN(limit)) {
       res.status(200).json({
         success: true,
         limit: products.slice(0, limit)
@@ -54,10 +54,9 @@ app.get('/products/:pid', async (req, res) => {
 
   try {
     let { pid } = req.params
-    pid = Number(pid)
 
-    if (pid && !isNaN(pid)) {
-      const foundedProduct = await productManager.getproductById(pid)
+    if (!isNaN(pid)) {
+      const foundedProduct = await productManager.getproductById(Number(pid))
       res.status(200).json({
         success: true,
         pid: foundedProduct
@@ -79,5 +78,5 @@ app.get('/products/:pid', async (req, res) => {
 })
 
 app.listen(3000, () => {
-  console.log(`[index.js]: 🚀 Server running on por ${PORT}`)
+  console.log(`[app.js]: 🚀 Server running on por ${PORT}`)
 })
