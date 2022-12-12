@@ -7,29 +7,29 @@ export class ProductManager {
     this.path = path
   }
 
-  async addProduct(title, description, price, thumbnail, code, stock) {
+  async addProduct(newProduct) {
     try {
       // Validate constructor data
-      if (!this.#validateFields(title, description, price, thumbnail, code, stock))
+      if (!this.#validateFields(newProduct))
         return
 
       // Read products from file
       await this.#readProducts()
 
       // Validate product code not repeat
-      if (this.products.find((product) => product.code === code)) {
+      if (this.products.find((product) => product.code === newProduct.code)) {
         console.log('Product code already exist')
         return
       }
 
       const product = {
         id: this.#getMaxId() + 1,
-        title,
-        description,
-        price,
-        thumbnail,
-        code,
-        stock
+        title: newProduct.title,
+        description: newProduct.description,
+        price: newProduct.price,
+        thumbnail: newProduct.thumbnail,
+        code: newProduct.code,
+        stock: newProduct.stock
       }
 
       this.products.push(product)
@@ -41,26 +41,6 @@ export class ProductManager {
       throw new Error('Error adding new product')
     }
 
-  }
-
-  // If file does not exist: crerate file and add some products
-  async loadTestData() {
-    try {
-      if (!fs.existsSync(this.path)) {
-        await this.addProduct('Producto 1', 'Este es un producto de prueba', 100, 'Sin imagen', 'A1A1A1', 25)
-        await this.addProduct('Producto 2', 'Este es un producto de prueba', 200, 'Sin imagen', 'B2B2B2', 35)
-        await this.addProduct('Producto 3', 'Este es un producto de prueba', 300, 'Sin imagen', 'C3C3C3', 45)
-        await this.addProduct('Producto 4', 'Este es un producto de prueba', 400, 'Sin imagen', 'D4D4D4', 29)
-        await this.addProduct('Producto 5', 'Este es un producto de prueba', 500, 'Sin imagen', 'E5E5E5', 67)
-        await this.addProduct('Producto 6', 'Este es un producto de prueba', 600, 'Sin imagen', 'F6F6F6', 35)
-        await this.addProduct('Producto 7', 'Este es un producto de prueba', 700, 'Sin imagen', 'G6F7G7', 95)
-        await this.addProduct('Producto 8', 'Este es un producto de prueba', 800, 'Sin imagen', 'H6F8H8', 35)
-        await this.addProduct('Producto 9', 'Este es un producto de prueba', 900, 'Sin imagen', 'I6F9F9', 38)
-        await this.addProduct('Producto 10', 'Este es un producto de prueba', 1000, 'Sin imagen', 'J6J1J1', 33)
-      }
-    } catch (error) {
-      throw new Error('Error loading test data')
-    }
   }
 
   async getProducts() {
@@ -127,8 +107,8 @@ export class ProductManager {
 
   #getMaxId() {
     let maxId = 0
-    this.products.map((event) => {
-      if (event.id > maxId) maxId = event.id
+    this.products.map((product) => {
+      if (product.id > maxId) maxId = product.id
     })
     return maxId
   }
@@ -146,7 +126,9 @@ export class ProductManager {
     }
   }
 
-  #validateFields(title, description, price, thumbnail, code, stock) {
+  #validateFields(newProduct) {
+
+    const { title, description, price, thumbnail, code, stock } = newProduct
 
     if( !title || !isNaN(title)) {
       console.log('Bad or missing title. Must be a string')

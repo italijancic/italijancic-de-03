@@ -1,38 +1,5 @@
-import express from 'express'
 
-import { ProductManager } from './productManager.js'
-
-const PORT = 8080
-
-const app = express()
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-// Class instace creation
-const productManager = new ProductManager('./src/store/products.json')
-
-// const newProduct = {
-//   title: 'Test',
-//   description: 'Test product',
-//   price: 24,
-//   thumbnail: './imgs',
-//   code: 'T2T4I',
-//   stock: 2024
-// }
-
-// await productManager.addProduct(newProduct)
-
-// To test server runnning
-app.get('/', (req, res) => {
-
-  res.status(200).json({
-    success: true,
-    message: 'Hello from Express server'
-  })
-})
-
-app.get('/products', async (req, res) => {
-
+export const getProducts = async (req, res, productManager) => {
   try {
     let { limit } = req.query
     const products = await productManager.getProducts()
@@ -59,11 +26,9 @@ app.get('/products', async (req, res) => {
       message: error.message
     })
   }
+}
 
-})
-
-app.get('/products/:pid', async (req, res) => {
-
+export const getproductById = async (req, res, productManager) => {
   try {
     let { pid } = req.params
 
@@ -86,9 +51,4 @@ app.get('/products/:pid', async (req, res) => {
       message: error.message
     })
   }
-
-})
-
-app.listen(PORT, () => {
-  console.log(`[app.js]: 🚀 Server running on por ${PORT}`)
-})
+}
